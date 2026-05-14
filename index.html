@@ -1,241 +1,598 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>MonDash Radio | F4IOW</title>
-<link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Roboto+Condensed:wght@300;700&family=Victor+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<meta name="description" content="F4IOW — Mission Dashboard — Colmar, France — JN38QB — DX Elite Station." />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📡</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css?family=Victor+Mono|Audiowide|Bebas+Neue" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@100..900&display=swap" rel="stylesheet" />
+<title>F4IOW · Mission Dashboard</title>
+<!--
+F4IOW Mission Dashboard
+License: MIT
+Copyright (c) 2026 Jean-Maurice Mwayembe, F4IOW
+https://www.example.com/mondash
+
+Credits:
+Projet inspiré du tableau de bord HAMSHACK-DASHBOARD de N2MXX
+publié à l'adresse https://nject.us/HAMSHACK-DASHBOARD-O.html
+
+.d8888. d888888b db db db d88888b.d8888.
+88' YP `~~88~~' `8b d8' 88 88' 88' YP
+`8bo. 88 `8bd8' 88 88ooooo `8bo.
+`Y8b. 88 88 88 88~~~~~ `Y8b.
+db 8D 88 88 88booo. 88. db 8D
+`8888Y' YP YP Y88888P Y88888P `8888Y'
+-->
 <style>
 :root {
---bg-color: #0a0a0a;
---panel-bg: rgba(30, 30, 35, 0.9);
---accent-blue: #0077ff;
---accent-green: #00ffcc;
---accent-orange: #ff9100;
---text-color: #e0e0e0;
---border-radius: 8px;
---grid-gap: 8px;
-/* Variables dynamiques gérées par JS */
---main-layout: repeat(4, 1fr);
---main-height: 30vh;
+--main-layout: auto auto auto auto;
+--main-width: 24.9vw;
+--main-height: 31vh;
+--accent: #0077ff;
+--bg-dark: #0a0a0a;
+--menu-blur: blur(10px);
 }
 
-* { box-sizing: border-box; }
-
-body, html {
-background: var(--bg-color);
-color: var(--text-color);
+body,
+html {
+background: var(--bg-dark);
+font-size: 100%;
+max-width: 100%;
+overflow-x: hidden;
+height: 100%;
 margin: 0;
-height: 100vh;
-font-family: 'Roboto Condensed', sans-serif;
-overflow: hidden;
-}
-
-/* Barre supérieure stylisée */
-.top-bar {
-display: grid;
-grid-template-columns: 1fr 1.5fr 1fr;
-background: rgba(20, 20, 20, 0.95);
-backdrop-filter: blur(10px);
-border-bottom: 1px solid #333;
-padding: 8px 15px;
-height: 50px;
+justify-content: center;
 align-items: center;
 }
 
-.top-bar .child {
-font-family: 'Victor Mono', monospace;
-font-size: 13px;
-letter-spacing: 0.5px;
+/* Style for the div containing the iframe */
+.iframe-container {
+background-color: black;
+border: 0px none;
+position: fixed;
+height: 100%;
+width: 100%;
+z-index: -2;
+justify-content: center;
+align-items: center;
+}
+
+.img-zoom {
+background-color: black;
+left: 0px;
+border: 0px none;
+height: 100%;
+width: 100%;
+position: fixed;
+overflow: hidden;
+bottom: 0px;
+z-index: -2;
+}
+
+/* Style for the iframe element */
+.full-screen {
+background-color: black;
+border: 0px none;
+height: 100%;
+width: 98%;
+margin-bottom: 0px;
+margin-left: 1%;
+justify-content: center;
+align-items: center;
+-ms-zoom: 1;
+-moz-transform: scale(1);
+-moz-transform-origin: 0 0;
+-o-transform: scale(1);
+-o-transform-origin: 0 0;
+-webkit-transform: scale(1);
+-webkit-transform-origin: 0 0;
+}
+
+.default-frame {
+margin-top: 0px;
+margin-bottom: 0px;
+margin-left: 0px;
+left: 0px;
+border: 0px none;
+height: 100%;
+width: 100%;
+position: fixed;
+overflow: hidden;
+bottom: 0px;
+}
+
+.top-bar {
+display: grid;
+grid-template-columns: 1fr auto 1fr;
+background-color: #1a1a1a;
+color: #fff;
+padding: 0.8rem 1rem;
+border: 0px none;
+overflow: hidden;
+position: relative;
+width: auto;
+gap: 1rem;
+}
+
+.child {
+position: relative;
+display: flex;
+align-items: center;
+border: 1px solid hsl(210deg 8% 30%);
+border-radius: 6px;
+background: hsl(210deg 15% 15%);
+color: white;
+padding: 0.4rem 0.8rem;
+font-family: "Victor Mono", monospace;
+font-size: 0.95rem;
 }
 
 #topBarCenter {
-font-family: 'Audiowide', cursive;
-font-size: 1.2rem;
-text-transform: uppercase;
+font-family: "Audiowide", sans-serif;
+color: var(--accent);
+font-size: 1.1rem;
+white-space: nowrap;
 }
 
-/* Grille du Dashboard */
+/* Style for the dashboard container */
 .dashboard {
 display: grid;
 grid-template-columns: var(--main-layout);
-gap: var(--grid-gap);
-padding: var(--grid-gap);
-height: calc(100vh - 80px); /* Ajusté pour barre sup + ticker */
-overflow-y: auto;
+grid-gap: 4px;
+border: 0px none;
+margin-bottom: 0px;
+overflow: hidden;
+position: relative;
+width: 100%;
+padding: 4px;
+box-sizing: border-box;
 }
 
+/* Style for the image container */
 .image-container {
 position: relative;
-background: #111;
-border-radius: var(--border-radius);
-overflow: hidden;
-border: 1px solid #222;
-transition: transform 0.2s, border-color 0.2s;
+float: inline-start;
+margin-right: 0px;
+border: 0px none;
 height: var(--main-height);
+width: var(--main-width);
+overflow: hidden;
+display: flex;
+justify-content: center;
+align-items: center;
+border-radius: 8px;
+background: #111;
+border: 1px solid #222;
 }
 
-.image-container:hover {
-border-color: var(--accent-blue);
-z-index: 10;
+.iframe-tile {
+position: absolute;
+float: inline-start;
+overflow: hidden;
+border: 0px none;
+display: flex;
+height: var(--main-height);
+width: var(--main-width);
+margin: 0;
+border-radius: 8px;
 }
 
-.image-container img, .image-container video, .iframe-tile {
-width: 100%;
+/* Style for the image */
+.image-container img {
 height: 100%;
+width: 100%;
 object-fit: cover;
 }
 
+/* Style for the image titles */
 .image-title {
 position: absolute;
-top: 10px;
-left: 10px;
-background: rgba(0, 0, 0, 0.7);
-padding: 2px 8px;
-border-radius: 4px;
-font-size: 11px;
-color: var(--accent-green);
-pointer-events: none;
-z-index: 5;
-text-transform: uppercase;
-}
-
-/* Menus latéraux épurés */
-.menuL, .menuR {
-position: fixed;
-top: 60px;
-display: flex;
-flex-direction: column;
-gap: 5px;
-z-index: 100;
-}
-
-.menuL { left: 0; }
-.menuR { right: 0; }
-
-.menu-link {
-text-decoration: none;
+bottom: 8px;
+left: 50%;
+transform: translateX(-50%);
 color: white;
-padding: 10px 15px;
-font-size: 12px;
-font-weight: bold;
-transition: 0.3s;
-min-width: 80px;
-text-align: center;
+background-color: rgba(0,0,0,0.7);
+font-size: 0.85rem;
+border-radius: 4px;
+padding: 2px 8px;
+font-family: "Roboto Condensed", sans-serif;
+font-weight: 400;
+z-index: 2;
+backdrop-filter: var(--menu-blur);
 }
 
-.menuL .menu-link { border-radius: 0 5px 5px 0; transform: translateX(-60px); }
-.menuR .menu-link { border-radius: 5px 0 0 5px; transform: translateX(60px); }
+.click-overlay {
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background-color: transparent;
+z-index: 1;
+cursor: pointer;
+}
 
-.menuL:hover .menu-link, .menuR:hover .menu-link { transform: translateX(0); }
+/* Style for the full screen image */
+.image-large {
+display: block;
+position: relative;
+margin-left: auto;
+margin-right: auto;
+max-height: 100%;
+max-width: 100%;
+height: 100%;
+width: auto;
+}
 
-/* Ticker RSS discret */
+.media {
+height: 100%;
+width: 100%;
+cursor: pointer;
+}
+
+.hidden {
+display: none;
+}
+
+/* Style for the left menu options */
+.menuL {
+display: grid;
+grid-gap: 4px;
+position: fixed;
+height: auto;
+width: auto;
+margin-top: 80px;
+left: -140px;
+z-index: 10;
+transition: 0.25s ease;
+}
+
+/* Style for the right menu options */
+.menuR {
+display: grid;
+grid-gap: 4px;
+position: fixed;
+height: auto;
+width: auto;
+margin-top: 80px;
+right: -140px;
+z-index: 10;
+transition: 0.25s ease;
+}
+
+#myMenuL:hover { left: 0px; }
+#myMenuR:hover { right: 0px; }
+
+#mySidenavL a {
+position: relative;
+float: inline-start;
+left: 0;
+transition: 0.25s;
+padding: 12px 16px;
+width: 140px;
+text-decoration: none;
+font-family: "Bebas Neue", sans-serif;
+font-size: 1.1rem;
+text-align: right;
+color: white;
+border-radius: 0 8px 8px 0;
+box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.6);
+backdrop-filter: var(--menu-blur);
+}
+
+#mySidenavL a:hover { left: 5px; }
+
+#mySidenavR a {
+position: relative;
+float: inline-start;
+right: 0;
+transition: 0.25s;
+padding: 12px 16px;
+width: 140px;
+text-decoration: none;
+font-family: "Bebas Neue", sans-serif;
+font-size: 1.1rem;
+text-align: left;
+color: white;
+border-radius: 8px 0px 0px 8px;
+box-shadow: -4px 4px 12px rgba(0, 0, 0, 0.6);
+backdrop-filter: var(--menu-blur);
+}
+
+#mySidenavR a:hover { right: 5px; }
+
+.menu-link.menu-core::before {
+content: '★ ';
+opacity: 0.8;
+}
+
+.menu-link.menu-config::before {
+content: '⚙️ ';
+opacity: 0.8;
+display: inline-block;
+transform: scale(0.8);
+}
+
+.overlay {
+display: none;
+position: fixed;
+top: 0;
+left: 0;
+height: 100%;
+width: 100%;
+background-color: rgba(0, 0, 0, 0.9);
+color: white;
+padding: 50px;
+box-sizing: border-box;
+z-index: 20;
+font-family: "Roboto Condensed", sans-serif;
+}
+
+.overlay-content {
+background-color: #1a1a1a;
+padding: 20px;
+border-radius: 10px;
+max-height: 80vh;
+overflow-y: auto;
+border: 1px solid #333;
+}
+
+.close-btn {
+cursor: pointer;
+color: white;
+float: right;
+font-size: 24px;
+}
+
+/************************/
+/* Settings page styles */
+/************************/
+.settings-Page {
+display: none;
+font-family: Arial, sans-serif;
+margin-top: 37px;
+background-color: #f5f5f5;
+height: 98%;
+width: 98%;
+margin-left: 1%;
+overflow-y: auto;
+color: #111;
+}
+
+.fixed-section {
+display: none;
+text-align: center;
+position: fixed;
+top: 0;
+left: 1%;
+width: 98%;
+background-color: var(--accent);
+padding-top: 7px;
+box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+z-index: -3;
+}
+
+.section {
+margin-bottom: 20px;
+display: flex;
+flex-wrap: wrap;
+}
+
+label {
+margin: 2px;
+font-weight: bold;
+}
+
+input[type="text"] {
+width: 90%;
+padding: 4px;
+margin-right: 5px;
+margin-bottom: 3px;
+border: 1px solid #ccc;
+border-radius: 4px;
+}
+
+input[type="number"] {
+width: 20%;
+padding: 4px;
+margin-bottom: 10px;
+border: 1px solid #ccc;
+border-radius: 4px;
+}
+
+table {
+width: 100%;
+border-collapse: collapse;
+margin-bottom: 10px;
+}
+
+table th,
+table td {
+border: 1px solid #ddd;
+padding: 8px;
+align-content: start;
+}
+
+table th {
+background-color: #f4f4f4;
+}
+
+button {
+padding: 6px 12px;
+margin: 0 4px 7px 0;
+cursor: pointer;
+background: linear-gradient(#f7f8fa, #e7e9ec);
+border: 1px solid #adb1b8;
+border-radius: 4px;
+color: #0f1111;
+font-size: 13px;
+}
+
+button:hover {
+border-color: #a2a6ac #979aa1 #82858a;
+}
+
+.radio-group {
+display: flex;
+align-items: center;
+}
+
+.radio-group label {
+margin-right: 15px;
+padding-top: 5px;
+font-weight: normal;
+}
+
+/************************/
+/* Settings RSS styles */
+/************************/
 .rss-ticker {
 position: fixed;
 bottom: 0;
 width: 100%;
-background: #000;
-border-top: 1px solid #333;
-height: 30px;
-display: flex;
-align-items: center;
-font-family: 'Victor Mono', monospace;
+background-color: rgba(0, 0, 0, 0.8);
+overflow: hidden;
+white-space: nowrap;
+box-sizing: border-box;
+padding: 6px 0;
+font-family: "Victor Mono", monospace;
+font-size: 0.9rem;
+font-weight: bold;
+z-index: 10;
+backdrop-filter: var(--menu-blur);
+border-top: 1px solid #222;
+}
+
+.rss-ticker-content {
+display: inline-block;
+padding-left: 100%;
+animation: ticker var(--ticker-duration, 90s) linear infinite;
+animation-play-state: running;
 }
 
 .rss-ticker-content a {
-color: var(--accent-orange);
-font-weight: bold;
-margin-right: 40px;
+text-decoration: none;
+color: var(--accent);
 }
 
-/* Styles formulaire de config (Simplifié) */
-.settings-Page {
-background: #1a1a1c;
-color: white;
-padding: 30px;
-border-radius: 15px;
+@keyframes ticker {
+0% { transform: translateX(0%); }
+100% { transform: translateX(-100%); }
 }
-
-button {
-background: #333;
-color: white;
-border: 1px solid #555;
-padding: 5px 15px;
-cursor: pointer;
-border-radius: 4px;
-}
-button:hover { background: var(--accent-blue); }
-
-/* Utilitaires */
-.hidden { display: none; }
 </style>
-</head>
-<body onload="main()">
 
-<!-- Conteneur pour le mode Plein Écran -->
-<div id="iFrameContainer" class="iframe-container" style="position:fixed; width:100%; height:100%; z-index:-1; background:black;">
-<iframe id="FullScreen" style="width:100%; height:100%; border:none; display:none;"></iframe>
-
-<!-- Page de Configuration intégrée -->
-<div id="settingsPage" class="settings-Page hidden" style="position:relative; z-index:1000; overflow-y:auto; height:100%;">
-<div id="fixedSection">
-<button onclick="location.reload()">Fermer / Appliquer</button>
-<button id="saveConfig">💾 Sauvegarder</button>
-</div>
-<h2>⚙️ Configuration MonDash</h2>
-<div class="section">
-<label>Texte Central:</label> <input type="text" id="CenterText" style="width:300px">
-</div>
-<div class="section">
-<label>Grille:</label>
-Cols: <input type="number" id="layout_cols" style="width:50px">
-Rows: <input type="number" id="layout_rows" style="width:50px">
-</div>
-<!-- Les tables de config s'injectent ici via votre JS existant -->
-<div id="configForm">
-<table id="menuTable"><thead><tr><th>Couleur</th><th>Texte</th><th>URL</th><th>Actions</th></tr></thead><tbody></tbody></table>
-<table id="dashboardTable"><thead><tr><th>Titre</th><th>URLs</th><th>Intervalle</th><th>Actions</th></tr></thead><tbody></tbody></table>
-</div>
-</div>
-</div>
-
-<!-- Interface Principale -->
-<div id="defaultFrame">
-<header class="top-bar">
-<div id="topBarLeft" class="child" style="color: var(--accent-green)">--:--:--</div>
-<div id="topBarCenter" class="child" style="color: var(--accent-blue); text-align: center;">MONDASH RADIO</div>
-<div id="topBarRight" class="child" style="color: var(--accent-orange); text-align: right;">UTC --:--</div>
-</header>
-
-<main id="dash" class="dashboard">
-<!-- Injecté par JS -->
-</main>
-</div>
-
-<!-- Menus -->
-<nav id="myMenuL" class="menuL"></nav>
-<nav id="myMenuR" class="menuR"></nav>
-
-<!-- Overlay Infos -->
-<div id="overlay" class="overlay hidden">
-<div class="close-btn" onclick="hideOverlay()">✖</div>
-<div class="overlay-content" id="array-info"></div>
-</div>
-
-<!-- Votre logique JS originale (conservée et adaptée pour les nouveaux IDs) -->
+<script src="wheelzoom.js"></script>
 <script>
-// Note: Insérez ici votre bloc de script original.
-// J'ai mis à jour les sélecteurs CSS ci-dessus pour correspondre à vos fonctions.
-// Assurez-vous que la fonction start() met à jour les variables CSS :
+// Track critical page events
+window.addEventListener('DOMContentLoaded', () => {
+console.log('►►► DOMContentLoaded fired');
+});
 
-function start() {
-const cols = window.layout_cols || 4;
-const rows = window.layout_rows || 3;
-document.documentElement.style.setProperty('--main-layout', `repeat(${cols}, 1fr)`);
-document.documentElement.style.setProperty('--main-height', `${90 / rows}vh`);
+window.addEventListener('load', () => {
+console.log('►►► Page fully loaded');
+});
 
-// ... suite de votre fonction start() originale pour générer les div "image-container" ...
+console.log('►►► Script loaded and running');
+
+function getColumnHeaderTitle(tableId, columnNumber) {
+const table = document.getElementById(tableId);
+if (!table) {
+console.error(`Table with id ${tableId} not found.`);
+return null;
 }
-</script>
-</body>
-</html>
+
+const headers = table.querySelectorAll("thead th");
+if (columnNumber < 0 || columnNumber >= headers.length) {
+console.error(`Invalid column number ${columnNumber}.`);
+return null;
+}
+
+return headers[columnNumber].textContent;
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+// Default Values
+const defaults = {
+settingsSource: "localStorage",
+topBarCenterText: "F4IOW · COLMAR · JN38QB · DX ELITE STATION",
+layout_cols: 4,
+layout_rows: 3,
+aURL: [["2196F3", "Photos", "https://picsum.photos/", 1, "L"]],
+aImages: [
+["Tile 1", ["https://picsum.photos/seed/picsum/200/300"], 30000],
+["Tile 2", ["https://picsum.photos/seed/picsum/200/300"], 30000],
+["Tile 3", ["https://picsum.photos/seed/picsum/200/300"], 30000],
+["Tile 4", ["https://picsum.photos/seed/picsum/200/300"], 30000],
+["Tile 5", ["https://picsum.photos/seed/picsum/200/300"], 30000],
+["Tile 6", ["https://picsum.photos/seed/picsum/200/300"], 30000],
+["Tile 7", ["https://picsum.photos/seed/picsum/200/300"], 30000],
+["Tile 8", ["https://picsum.photos/seed/picsum/200/300"], 30000],
+["Tile 9", ["https://picsum.photos/seed/picsum/200/300"], 30000],
+["Tile 10", ["https://picsum.photos/seed/picsum/200/300"], 30000],
+["Tile 11", ["https://picsum.photos/seed/picsum/200/300"], 30000],
+["Tile 12", ["https://picsum.photos/seed/picsum/200/300"], 30000],
+],
+aRSS: [
+["https://www.amsat.org/feed/", 60],
+["https://daily.hamweekly.com/atom.xml", 60],
+],
+};
+
+settings = JSON.parse(localStorage.getItem("mondash_config")) || {...defaults };
+
+if (settings.settingsSource) {
+document.querySelector(`input[name="settingsSource"][value="${settings.settingsSource}"]`).checked = true;
+}
+
+adjustDashboardItems = () => {
+const totalItems = settings.layout_cols * settings.layout_rows;
+const currentItems = settings.aImages.length;
+
+if (currentItems < totalItems) {
+for (let i = currentItems; i < totalItems; i++) {
+settings.aImages.push(["", [""], 5000]);
+}
+} else if (currentItems > totalItems) {
+settings.aImages.splice(totalItems);
+}
+
+updateTable("dashboardTable", settings.aImages, ["Tile Title", "Tile URLs", "URL Rotation Interval (ms)"]);
+};
+
+updateMenuTable = () => {
+updateTable("menuTable", settings.aURL, ["Color", "Text", "URL", "Scale", "Side"]);
+};
+
+updateFeedTable = () => {
+updateTable("feedTable", settings.aRSS, ["Feed URL", "Refresh Interval (minutes)"]);
+};
+
+const updateTable = (tableId, data, columns) => {
+const tbody = document.querySelector(`#${tableId} tbody`);
+tbody.innerHTML = "";
+data.forEach((item, index) => {
+const row = document.createElement("tr");
+columns.forEach((col, colIndex) => {
+const cell = document.createElement("td");
+if (tableId == "menuTable" && colIndex == 0) {
+const colorInput = document.createElement("input");
+colorInput.type = "color";
+colorInput.value = "#" + item[colIndex].replace("#", "");
+colorInput.onchange = (e) => (item[colIndex] = e.target.value);
+cell.appendChild(colorInput);
+} else {
+if (Array.isArray(item[colIndex])) {
+const container = document.createElement("div");
+item[colIndex].forEach((url, urlIndex) => {
+const textarea = document.createElement("input");
+textarea.type = getColumnHeaderTitle(tableId, colIndex) === ""? "number" : "text";
+textarea.value = url;
+textarea.onchange = (e) => (item[colIndex][urlIndex] = e.target.value);
+container.appendChild(textarea);
+const removeBtn = document.createElement("button");
+removeBtn.text
