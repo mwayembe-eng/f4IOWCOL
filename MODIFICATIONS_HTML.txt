@@ -1,0 +1,56 @@
+F4IOW · MODIFICATIONS À FAIRE DANS TON FICHIER HTML
+
+1) Remplacer :
+<title>MonDash Radio</title>
+
+Par :
+<title>F4IOW · Mission Dashboard</title>
+
+
+2) Remplacer :
+<meta name="description" content="MonDash Radio - Tableau de bord radioamateur personnalisé" />
+
+Par :
+<meta name="description" content="F4IOW — Mission Dashboard — Colmar, France — JN38QB — DX Elite Station." />
+
+
+3) Remplacer dans le commentaire :
+Copyright (c) 2026 Jean Dupont, F4XYZ
+
+Par :
+Copyright (c) 2026 Jean-Maurice Mwayembe, F4IOW
+
+
+4) Remplacer :
+MonDash Radio
+
+Par :
+F4IOW Mission Dashboard
+
+
+5) Remplacer :
+Jean Dupont, F4XYZ
+
+Par :
+Jean-Maurice Mwayembe, F4IOW
+
+
+6) Remplacer :
+topBarCenterText: "CALLSIGN - Locator",
+
+Par :
+topBarCenterText: "F4IOW · COLMAR · JN38QB · DX ELITE STATION",
+
+
+7) Remplacer :
+window.topBarCenterText = "Utilisez 'Configuration' pour personnaliser votre MonDash Radio";
+
+Par :
+window.topBarCenterText = "F4IOW · COLMAR · JN38QB · DX ELITE STATION";
+
+
+8) Remplacer :
+<h1>Configuration de MonDash Radio</h1>
+
+Par :
+<h1>Configuration F4IOW Mission Dashboard</h1>
