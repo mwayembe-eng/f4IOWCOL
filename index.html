@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>F4IOW - Station DX</title>
+<style>
+:root {
+--bg-color: #121212;
+--text-color: #e0e0e0;
+--accent-color: #007bff;
+--header-bg: #1f1f1f;
+}
+
+body {
+font-family: Arial, sans-serif;
+background-color: var(--bg-color);
+color: var(--text-color);
+margin: 0;
+padding: 0;
+}
+
+header {
+background-color: var(--header-bg);
+padding: 20px;
+text-align: center;
+border-bottom: 2px solid var(--accent-color);
+}
+
+h1 {
+margin: 0;
+color: var(--accent-color);
+font-size: 2.5em;
+}
+
+.subtitle {
+font-size: 1.2em;
+color: #888;
+margin-top: 5px;
+}
+
+/* --- LE BANDEAU DÉFILANT (CSS Moderne) --- */
+.ticker-wrap {
+width: 100%;
+background-color: #004080;
+color: white;
+padding: 10px 0;
+overflow: hidden;
+white-space: nowrap;
+box-sizing: border-box;
+}
+
+.ticker {
+display: inline-block;
+padding-left: 100%;
+animation: ticker-anim 25s linear infinite;
+font-weight: bold;
+}
+
+@keyframes ticker-anim {
+0% { transform: translateX(0); }
+100% { transform: translateX(-100%); }
+}
+/* ------------------------------------------ */
+
+main {
+max-width: 900px;
+margin: 20px auto;
+padding: 0 20px;
+}
+
+.section-card {
+background-color: var(--header-bg);
+border-radius: 8px;
+padding: 20px;
+margin-bottom: 20px;
+box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
+
+h2 {
+border-bottom: 1px solid #444;
+padding-bottom: 10px;
+color: var(--accent-color);
+}
+
+.clock-container {
+font-size: 1.5em;
+font-weight: bold;
+text-align: center;
+margin: 15px 0;
+color: #ff9800;
+}
+
+a {
+color: var(--accent-color);
+text-decoration: none;
+}
+
+a:hover {
+text-decoration: underline;
+}
+
+ul {
+line-height: 1.6;
+}
+
+footer {
+text-align: center;
+padding: 20px;
+font-size: 0.9em;
+color: #666;
+}
+</style>
+</head>
+<body>
+
+<header>
+<h1>F4IOW - Station DX</h1>
+<div class="subtitle">COLMAR · ALSACE · JN38SI</div>
+</header>
+
+<!-- Bandeau défilant -->
+<div class="ticker-wrap">
+<div class="ticker">
+CQ CQ CQ de F4IOW - Bienvenue sur le logbook - Écoute active sur les bandes HF - Préparation des prochaines sorties SOTA/POTA 73 !
+</div>
+</div>
+
+<main>
+<div class="section-card clock-container" id="utc-clock">
+Heure UTC : --:--:--
+</div>
+
+<div class="section-card">
+<h2>À propos de la station</h2>
+<p>Basé au cœur de Colmar. Opérateur passionné par le DX et les modes numériques (FT8/FT4). L'équipement est fortement orienté QRP et portable (SOTA/POTA).</p>
+<p><em>Le bureau est actuellement en construction.</em></p>
+</div>
+
+<div class="section-card">
+<h2>Antennes & Matériel</h2>
+<ul>
+<li><strong>Portable :</strong> Diamond (HF-CL), JPC-12</li>
+<li><strong>Projet 2027 :</strong> Préparation du grenier pour l'installation d'une antenne Loop.</li>
+</ul>
+</div>
+
+<div class="section-card">
+<h2>Suivi Satellite (ISS)</h2>
+<p>Pour le suivi en temps réel de la Station Spatiale Internationale et autres passages, veuillez consulter les prévisions exactes :</p>
+<p>🛰️ <a href="https://www.heavens-above.com/" target="_blank">Accéder au suivi sur Heavens-Above</a></p>
+</div>
+</main>
+
+<footer>
+&copy; 2026 F4IOW - Hébergé sur GitHub Pages
+</footer>
+
+<script>
+// Script pour l'horloge UTC en temps réel
+function updateClock() {
+const now = new Date();
+const hours = String(now.getUTCHours()).padStart(2, '0');
+const minutes = String(now.getUTCMinutes()).padStart(2, '0');
+const seconds = String(now.getUTCSeconds()).padStart(2, '0');
+document.getElementById('utc-clock').textContent = `Heure UTC : ${hours}:${minutes}:${seconds}`;
+}
+
+setInterval(updateClock, 1000);
+updateClock(); // Initialisation immédiate
+</script>
+
+</body>
+</html>
